@@ -3,11 +3,15 @@ import { Product, CartItem } from '../types';
 
 interface CartContextType {
   items: CartItem[];
+  cart: CartItem[]; // alias for items
   addItem: (product: Product, quantity?: number) => void;
+  addToCart: (product: Product, quantity?: number) => void; // alias for addItem
   removeItem: (productId: string) => void;
+  removeFromCart: (productId: string) => void; // alias for removeItem
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
   itemCount: number;
+  totalItems: number; // alias for itemCount
   subtotal: number;
   estimatedTax: number;
   shipping: number;
@@ -105,11 +109,15 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     <CartContext.Provider
       value={{
         items,
+        cart: items,
         addItem,
+        addToCart: addItem,
         removeItem,
+        removeFromCart: removeItem,
         updateQuantity,
         clearCart,
         itemCount,
+        totalItems: itemCount,
         subtotal,
         estimatedTax,
         shipping,

@@ -1,143 +1,174 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingBag, ShieldCheck, Menu, X, ArrowRight } from 'lucide-react';
+import { ShoppingBag, Sun, Moon, ShieldCheck, Menu, X, ArrowUpRight } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
+import { useTheme } from '../../context/ThemeContext';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export const Navbar: React.FC = () => {
-  const { itemCount, setIsCartOpen } = useCart();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { totalItems, setIsCartOpen } = useCart();
+  const { isDark, toggleTheme } = useTheme();
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
 
-  const isActive = (path: string) => location.pathname === path;
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const navLinks = [
+    { label: 'Store', path: '/' },
+    { label: 'Checkout', path: '/checkout' },
+    { label: 'Admin Ops', path: '/admin' },
+    { label: 'Test Bench', path: '/admin/payments' },
+  ];
 
   return (
-    <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80">
+    <header
+      className={`sticky top-0 z-40 transition-all duration-300 ${
+        isScrolled
+          ? 'glass-panel shadow-elevated py-3'
+          : 'bg-transparent py-4 border-b border-transparent'
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center gap-8">
-            <Link to="/" className="flex items-center gap-2.5 group">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-700 via-brand-600 to-sky-400 flex items-center justify-center shadow-md shadow-brand-500/20 group-hover:scale-105 transition-transform">
-                <ShieldCheck className="w-5 h-5 text-white" />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-extrabold text-lg tracking-tight text-slate-900 group-hover:text-brand-600 transition-colors">
-                  PayFlow
+        <div className="flex items-center justify-between">
+          {/* Brand Logo */}
+          <Link to="/" className="flex items-center gap-2.5 group">
+            <motion.div
+              whileHover={{ rotate: 10, scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 via-brand-500 to-sky-400 flex items-center justify-center text-white shadow-glow"
+            >
+              <ShieldCheck className="w-5 h-5 text-white" />
+            </motion.div>
+            <div className="flex flex-col">
+              <div className="flex items-center gap-1.5">
+                <span className="font-extrabold text-lg tracking-tight text-slate-900 dark:text-white font-sans">
+                  PAY<span className="text-brand-500">FLOW</span>
                 </span>
-                <span className="text-[10px] tracking-widest font-semibold uppercase text-slate-600 -mt-1">
-                  Payoneer Checkout
+                <span className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold border border-slate-200 dark:border-slate-700">
+                  Payoneer
                 </span>
               </div>
-            </Link>
+              <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium tracking-tight -mt-1 hidden sm:block">
+                Enterprise Checkout
+              </span>
+            </div>
+          </Link>
 
-            <nav className="hidden md:flex items-center space-x-1">
-              <Link
-                to="/"
-                className={`px-3.5 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                  isActive('/')
-                    ? 'text-brand-700 bg-brand-50 font-semibold'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70'
-                }`}
-              >
-                Storefront
-              </Link>
-              <Link
-                to="/checkout"
-                className={`px-3.5 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                  isActive('/checkout')
-                    ? 'text-brand-700 bg-brand-50 font-semibold'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70'
-                }`}
-              >
-                Checkout Demo
-              </Link>
-              <Link
-                to="/admin"
-                className={`px-3.5 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                  isActive('/admin')
-                    ? 'text-brand-700 bg-brand-50 font-semibold'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70'
-                }`}
-              >
-                Admin Dashboard
-              </Link>
-              <Link
-                to="/admin/payments"
-                className={`px-3.5 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                  isActive('/admin/payments')
-                    ? 'text-brand-700 bg-brand-50 font-semibold'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70'
-                }`}
-              >
-                Debug Bench
-              </Link>
-            </nav>
-          </div>
+          {/* Navigation Links - Desktop */}
+          <nav className="hidden md:flex items-center gap-1 bg-slate-100/70 dark:bg-slate-800/70 p-1 rounded-full border border-slate-200/60 dark:border-slate-700/60 backdrop-blur-md">
+            {navLinks.map(link => {
+              const isActive = location.pathname === link.path;
+              return (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className={`relative px-4 py-1.5 text-xs font-semibold rounded-full transition-all duration-200 ${
+                    isActive
+                      ? 'text-white'
+                      : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+                  }`}
+                >
+                  {isActive && (
+                    <motion.div
+                      layoutId="navPill"
+                      className="absolute inset-0 bg-brand-600 dark:bg-brand-500 rounded-full -z-10 shadow-sm"
+                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                    />
+                  )}
+                  {link.label}
+                </Link>
+              );
+            })}
+          </nav>
 
-          <div className="flex items-center gap-3">
-            <button
+          {/* Action buttons */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Theme Toggle Button */}
+            <motion.button
+              whileTap={{ scale: 0.9 }}
+              whileHover={{ scale: 1.05 }}
+              onClick={toggleTheme}
+              aria-label="Toggle Theme"
+              className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+            >
+              {isDark ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
+            </motion.button>
+
+            {/* Cart Trigger Button */}
+            <motion.button
+              whileTap={{ scale: 0.92 }}
+              whileHover={{ scale: 1.03 }}
               onClick={() => setIsCartOpen(true)}
-              className="relative p-2.5 rounded-xl border border-slate-200/80 bg-slate-50/50 hover:bg-white hover:border-slate-300 text-slate-700 transition-all hover:shadow-sm"
-              aria-label="View Shopping Cart"
+              className="relative flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-xs font-semibold shadow-subtle transition-all duration-200"
+              aria-label="Shopping Cart"
             >
-              <ShoppingBag className="w-5 h-5" />
-              {itemCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 bg-brand-600 text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-sm animate-in zoom-in-75">
-                  {itemCount}
-                </span>
-              )}
-            </button>
+              <ShoppingBag className="w-4 h-4" />
+              <span className="hidden sm:inline">Cart</span>
 
-            <Link
-              to="/checkout"
-              className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-sm transition-all hover:shadow"
-            >
-              <span>Instant Checkout</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
+              <AnimatePresence mode="wait">
+                {totalItems > 0 && (
+                  <motion.span
+                    key={totalItems}
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.5, opacity: 0 }}
+                    transition={{ type: 'spring', stiffness: 500, damping: 25 }}
+                    className="flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold rounded-full bg-brand-500 text-white shadow-sm"
+                  >
+                    {totalItems}
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </motion.button>
 
+            {/* Mobile Menu Toggle */}
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 text-slate-600 hover:text-slate-900"
-              aria-label="Toggle navigation menu"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="p-2 rounded-xl text-slate-700 dark:text-slate-200 md:hidden hover:bg-slate-100 dark:hover:bg-slate-800"
+              aria-label="Open Navigation Menu"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
-      </div>
 
-      {mobileMenuOpen && (
-        <div className="md:hidden border-t border-slate-200 bg-white px-4 pt-2 pb-4 space-y-1">
-          <Link
-            to="/"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50"
-          >
-            Storefront
-          </Link>
-          <Link
-            to="/checkout"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50"
-          >
-            Checkout Demo
-          </Link>
-          <Link
-            to="/admin"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50"
-          >
-            Admin Dashboard
-          </Link>
-          <Link
-            to="/admin/payments"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50"
-          >
-            Debug Bench
-          </Link>
-        </div>
-      )}
+        {/* Mobile Navigation Dropdown */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="md:hidden overflow-hidden mt-3 pt-3 border-t border-slate-200 dark:border-slate-800"
+            >
+              <div className="flex flex-col gap-1 pb-3">
+                {navLinks.map(link => (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium ${
+                      location.pathname === link.path
+                        ? 'bg-brand-50 dark:bg-brand-950/40 text-brand-600 dark:text-brand-400 font-semibold'
+                        : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
+                    }`}
+                  >
+                    <span>{link.label}</span>
+                    <ArrowUpRight className="w-4 h-4 opacity-50" />
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </header>
   );
 };

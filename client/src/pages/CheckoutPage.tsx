@@ -6,8 +6,9 @@ import { api } from '../services/api';
 import { CheckoutForm } from '../components/checkout/CheckoutForm';
 import { OrderSummary } from '../components/checkout/OrderSummary';
 import { PayoneerPaymentSection } from '../components/checkout/PayoneerPaymentSection';
-import { ShoppingBag, ArrowLeft } from 'lucide-react';
+import { ShoppingBag, ArrowLeft, ShieldCheck, Lock, CheckCircle2 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 export const CheckoutPage: React.FC = () => {
   const { items, total } = useCart();
@@ -73,7 +74,7 @@ export const CheckoutPage: React.FC = () => {
     }
 
     if (!validateForm()) {
-      showNotification('error', 'Please correct the highlighted fields in the form.', 'Validation Error');
+      showNotification('error', 'Please complete the required shipping information.', 'Validation Error');
       return;
     }
 
@@ -114,44 +115,67 @@ export const CheckoutPage: React.FC = () => {
 
   if (items.length === 0) {
     return (
-      <div className="max-w-2xl mx-auto py-16 px-4 text-center">
-        <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-5 text-slate-400">
-          <ShoppingBag className="w-10 h-10" />
-        </div>
-        <h2 className="text-2xl font-bold text-slate-900">Your Checkout Cart is Empty</h2>
-        <p className="text-slate-500 text-sm mt-2 max-w-sm mx-auto">
-          You need at least one product in your cart to proceed with the Payoneer payment checkout.
+      <div className="max-w-2xl mx-auto py-20 px-4 text-center">
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded-3xl flex items-center justify-center mx-auto mb-6 text-slate-400 shadow-subtle"
+        >
+          <ShoppingBag className="w-10 h-10 opacity-60" />
+        </motion.div>
+        <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          Your Checkout Cart is Empty
+        </h2>
+        <p className="text-slate-500 dark:text-slate-400 text-sm mt-2 max-w-sm mx-auto leading-relaxed">
+          Please select products from the store before proceeding to the Payoneer hosted payment gateway.
         </p>
         <Link
           to="/"
-          className="mt-6 inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs transition-all shadow-sm"
+          className="mt-8 inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold text-xs transition-all shadow-glow"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Browse Products</span>
+          <span>Explore Products</span>
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="py-8 space-y-8">
-      <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+    <div className="py-8 sm:py-12 space-y-8">
+      {/* Checkout Header & Steps */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
         <div>
-          <h1 className="text-2xl font-black tracking-tight text-slate-900">Checkout</h1>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Complete your shipping address and review your order before paying.
-          </p>
+          <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 dark:text-brand-400 mb-1">
+            <Lock className="w-3.5 h-3.5" />
+            <span>End-to-End Encrypted Session</span>
+          </div>
+          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+            Checkout
+          </h1>
         </div>
-        <Link
-          to="/"
-          className="text-xs font-semibold text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition-colors"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Return to Store</span>
-        </Link>
+
+        {/* Step indicator */}
+        <div className="flex items-center gap-2 text-xs font-medium text-slate-500 dark:text-slate-400">
+          <span className="flex items-center gap-1 text-brand-600 dark:text-brand-400 font-bold">
+            <span className="w-5 h-5 rounded-full bg-brand-600 text-white text-[10px] flex items-center justify-center">1</span>
+            Details
+          </span>
+          <span className="text-slate-300 dark:text-slate-700">───</span>
+          <span className="flex items-center gap-1">
+            <span className="w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-[10px] flex items-center justify-center">2</span>
+            Payoneer Portal
+          </span>
+          <span className="text-slate-300 dark:text-slate-700">───</span>
+          <span className="flex items-center gap-1">
+            <span className="w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-[10px] flex items-center justify-center">3</span>
+            Confirmation
+          </span>
+        </div>
       </div>
 
+      {/* 2-Column Responsive Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Left Column: Customer & Shipping details */}
         <div className="lg:col-span-7 space-y-6">
           <CheckoutForm
             customer={customer}
@@ -162,7 +186,8 @@ export const CheckoutPage: React.FC = () => {
           />
         </div>
 
-        <div className="lg:col-span-5 space-y-6 lg:sticky lg:top-24">
+        {/* Right Column: Order Summary + Payoneer Gateway CTA */}
+        <div className="lg:col-span-5 space-y-6">
           <OrderSummary />
           <PayoneerPaymentSection
             onPay={handleInitiatePayment}
