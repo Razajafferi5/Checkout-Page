@@ -13,45 +13,45 @@ export const PaymentCancelledPage: React.FC = () => {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.4 }}
-        className="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-2xl p-8 text-center space-y-6"
+        className="rounded-3xl bg-ivory dark:bg-ivory-dark border border-stone-warm/80 dark:border-white/10 shadow-elevated p-8 text-center space-y-6"
       >
-        <div className="w-16 h-16 rounded-3xl bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-900 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto shadow-subtle">
+        <div className="w-16 h-16 rounded-full bg-champagne-pale dark:bg-champagne/10 border border-champagne/30 text-champagne-dark dark:text-champagne flex items-center justify-center mx-auto shadow-subtle">
           <AlertCircle className="w-8 h-8" />
         </div>
 
         <div className="space-y-2">
-          <span className="text-xs font-mono font-bold text-amber-600 dark:text-amber-400 uppercase tracking-widest">
-            Session Aborted
+          <span className="text-xs font-mono font-bold text-champagne-dark dark:text-champagne uppercase tracking-widest">
+            Session Concluded
           </span>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-            Payment was cancelled
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-charcoal dark:text-ivory tracking-tight">
+            Checkout Suspended
           </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto leading-relaxed">
-            You exited the Payoneer checkout session before completing authorization. Your cart and selection remain completely intact.
+          <p className="text-xs text-charcoal/70 dark:text-ivory/60 max-w-sm mx-auto leading-relaxed font-sans">
+            You exited the Payoneer checkout session before completing authorization. Your bag and selections remain preserved.
           </p>
         </div>
 
         {orderNumber && (
-          <div className="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-xs text-slate-600 dark:text-slate-300 font-mono">
-            Order Reference: {orderNumber}
+          <div className="bg-stone-warm/40 dark:bg-white/5 border border-stone-warm dark:border-white/10 rounded-xl p-3 text-xs text-charcoal/70 dark:text-ivory/70 font-mono">
+            Preserved Order Reference: {orderNumber}
           </div>
         )}
 
         <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
           <Link
             to="/checkout"
-            className="w-full sm:flex-1 py-3 px-4 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-glow transition-all"
+            className="w-full sm:flex-1 py-3 px-5 rounded-full bg-emerald-800 hover:bg-emerald-700 text-ivory font-semibold text-xs flex items-center justify-center gap-2 shadow-elevated transition-all tracking-wider uppercase"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="w-4 h-4 text-champagne" />
             <span>Return to Checkout</span>
           </Link>
 
           <Link
             to="/"
-            className="w-full sm:flex-1 py-3 px-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold text-xs flex items-center justify-center gap-2 transition-colors"
+            className="w-full sm:flex-1 py-3 px-5 rounded-full border border-stone-muted dark:border-white/20 hover:bg-stone-warm dark:hover:bg-white/10 text-charcoal dark:text-ivory font-medium text-xs flex items-center justify-center gap-2 transition-colors"
           >
             <ShoppingBag className="w-4 h-4" />
-            <span>Continue Shopping</span>
+            <span>Storefront</span>
           </Link>
         </div>
       </motion.div>

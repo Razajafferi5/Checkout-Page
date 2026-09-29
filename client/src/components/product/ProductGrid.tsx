@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Product } from '../../types';
 import { ProductCard } from './ProductCard';
 import { QuickViewModal } from './QuickViewModal';
-import { Sparkles, SlidersHorizontal } from 'lucide-react';
 
 interface ProductGridProps {
   products: Product[];
@@ -22,80 +21,77 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ products, loading }) =
       : products.filter(p => p.category.toLowerCase() === selectedCategory.toLowerCase());
 
   return (
-    <section id="products-grid" className="py-12">
-      {/* Section Header & Filters */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+    <section id="editorial-store" className="py-12 sm:py-16">
+      {/* Editorial Section Header & Text Filter Navigation */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 pb-6 border-b border-stone-warm dark:border-white/10">
         <div>
-          <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 dark:text-brand-400 mb-1">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Curated Hardware Catalog</span>
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-            Available Products
+          <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-800 dark:text-champagne font-bold block mb-1">
+            Curated Hardware Collection
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-serif font-bold tracking-tight text-charcoal dark:text-ivory">
+            The Catalog
           </h2>
         </div>
 
-        {/* Category Pills */}
-        <div className="flex flex-wrap items-center gap-1.5 bg-slate-100 dark:bg-slate-800/80 p-1 rounded-xl border border-slate-200/80 dark:border-slate-700/80">
+        {/* Category Text Filters with Animated Gold Underline */}
+        <div className="flex flex-wrap items-center gap-6 sm:gap-8">
           {categories.map(cat => {
             const isSelected = selectedCategory === cat;
             return (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`relative px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
+                className={`relative pb-1.5 text-xs font-mono uppercase tracking-wider font-semibold transition-colors duration-200 ${
                   isSelected
-                    ? 'text-white'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    ? 'text-emerald-900 dark:text-champagne'
+                    : 'text-charcoal-muted dark:text-stone-muted hover:text-charcoal dark:hover:text-white'
                 }`}
               >
+                {cat}
                 {isSelected && (
                   <motion.div
-                    layoutId="categoryPill"
-                    className="absolute inset-0 bg-brand-600 dark:bg-brand-500 rounded-lg -z-10 shadow-sm"
-                    transition={{ type: 'spring', stiffness: 450, damping: 30 }}
+                    layoutId="categoryGoldUnderline"
+                    className="absolute bottom-0 left-0 right-0 h-[2px] bg-champagne"
+                    transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                   />
                 )}
-                {cat}
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* Skeletons when loading */}
+      {/* Editorial Skeletons */}
       {loading && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[...Array(8)].map((_, i) => (
-            <div
-              key={i}
-              className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 overflow-hidden shadow-subtle flex flex-col justify-between h-[360px]"
-            >
-              <div className="shimmer-card rounded-xl aspect-[4/3] mb-4" />
-              <div className="space-y-2">
-                <div className="shimmer-card h-4 rounded w-3/4" />
-                <div className="shimmer-card h-3 rounded w-1/2" />
-              </div>
-              <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                <div className="shimmer-card h-6 rounded w-16" />
-                <div className="shimmer-card h-8 rounded w-20" />
-              </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="md:col-span-2 md:row-span-2 rounded-2xl editorial-glass p-8 min-h-[420px] flex flex-col justify-between">
+            <div className="editorial-shimmer rounded-xl aspect-[16/9] mb-4" />
+            <div className="space-y-2">
+              <div className="editorial-shimmer h-6 rounded w-1/3" />
+              <div className="editorial-shimmer h-4 rounded w-1/2" />
+            </div>
+          </div>
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="rounded-2xl editorial-glass p-6 min-h-[260px] flex flex-col justify-between">
+              <div className="editorial-shimmer rounded-xl aspect-[4/3] mb-4" />
+              <div className="editorial-shimmer h-4 rounded w-2/3" />
             </div>
           ))}
         </div>
       )}
 
-      {/* Product Cards Grid with Framer Motion Stagger */}
+      {/* Asymmetrical Editorial Product Layout */}
       {!loading && (
         <motion.div
           layout
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           <AnimatePresence>
-            {filteredProducts.map(product => (
+            {filteredProducts.map((product, idx) => (
               <ProductCard
                 key={product._id}
                 product={product}
+                featured={idx === 0 && selectedCategory === 'All'}
                 onQuickView={p => setQuickViewProduct(p)}
               />
             ))}

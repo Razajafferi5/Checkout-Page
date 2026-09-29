@@ -6,7 +6,7 @@ import { api } from '../services/api';
 import { CheckoutForm } from '../components/checkout/CheckoutForm';
 import { OrderSummary } from '../components/checkout/OrderSummary';
 import { PayoneerPaymentSection } from '../components/checkout/PayoneerPaymentSection';
-import { ShoppingBag, ArrowLeft, ShieldCheck, Lock, CheckCircle2 } from 'lucide-react';
+import { ShoppingBag, ArrowLeft, Lock, ShieldCheck } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
@@ -19,22 +19,22 @@ export const CheckoutPage: React.FC = () => {
   const [billingSameAsShipping, setBillingSameAsShipping] = useState(true);
 
   const [customer, setCustomer] = useState<CustomerInfo>({
-    firstName: 'Alex',
-    lastName: 'Morgan',
-    email: 'alex.morgan@example.com',
-    phone: '+1 555-234-5678',
+    firstName: 'Jane',
+    lastName: 'Doe',
+    email: 'jane.doe@example.com',
+    phone: '+1 555-0144',
     shippingAddress: {
-      address: '100 Innovation Way',
-      city: 'Austin',
-      state: 'TX',
-      postalCode: '78701',
+      address: '742 Evergreen Terrace',
+      city: 'Springfield',
+      state: 'OR',
+      postalCode: '97477',
       country: 'US',
     },
     billingAddress: {
-      address: '100 Innovation Way',
-      city: 'Austin',
-      state: 'TX',
-      postalCode: '78701',
+      address: '742 Evergreen Terrace',
+      city: 'Springfield',
+      state: 'OR',
+      postalCode: '97477',
       country: 'US',
     },
   });
@@ -69,12 +69,12 @@ export const CheckoutPage: React.FC = () => {
 
   const handleInitiatePayment = async () => {
     if (items.length === 0) {
-      showNotification('error', 'Your shopping cart is empty. Please add products before checking out.');
+      showNotification('error', 'Your shopping bag is empty. Please select products first.');
       return;
     }
 
     if (!validateForm()) {
-      showNotification('error', 'Please complete the required shipping information.', 'Validation Error');
+      showNotification('error', 'Please complete the required destination fields.', 'Validation Error');
       return;
     }
 
@@ -115,67 +115,66 @@ export const CheckoutPage: React.FC = () => {
 
   if (items.length === 0) {
     return (
-      <div className="max-w-2xl mx-auto py-20 px-4 text-center">
+      <div className="max-w-2xl mx-auto py-24 px-4 text-center">
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded-3xl flex items-center justify-center mx-auto mb-6 text-slate-400 shadow-subtle"
+          className="w-20 h-20 bg-stone-warm/50 dark:bg-ivory-elevated rounded-3xl flex items-center justify-center mx-auto mb-6 text-charcoal-muted dark:text-champagne shadow-subtle border border-stone-warm dark:border-white/10"
         >
-          <ShoppingBag className="w-10 h-10 opacity-60" />
+          <ShoppingBag className="w-10 h-10 opacity-70" />
         </motion.div>
-        <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-          Your Checkout Cart is Empty
+        <h2 className="font-serif text-3xl font-bold text-charcoal dark:text-ivory tracking-tight">
+          Your Shopping Bag is Empty
         </h2>
-        <p className="text-slate-500 dark:text-slate-400 text-sm mt-2 max-w-sm mx-auto leading-relaxed">
-          Please select products from the store before proceeding to the Payoneer hosted payment gateway.
+        <p className="text-charcoal-muted dark:text-stone-muted text-xs font-mono uppercase tracking-wider mt-2 max-w-sm mx-auto leading-relaxed">
+          Please select items from the catalog before proceeding to checkout.
         </p>
         <Link
           to="/"
-          className="mt-8 inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold text-xs transition-all shadow-glow"
+          className="mt-8 inline-flex items-center gap-2 px-7 py-3.5 rounded-lg bg-emerald-900 hover:bg-emerald-800 text-ivory font-mono text-xs uppercase tracking-wider font-semibold transition-all shadow-emerald border border-emerald-700/40"
         >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Explore Products</span>
+          <ArrowLeft className="w-4 h-4 text-champagne" />
+          <span>Explore Store</span>
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="py-8 sm:py-12 space-y-8">
-      {/* Checkout Header & Steps */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
+    <div className="py-10 space-y-10">
+      {/* Checkout Editorial Header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-stone-warm dark:border-white/10">
         <div>
-          <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 dark:text-brand-400 mb-1">
-            <Lock className="w-3.5 h-3.5" />
-            <span>End-to-End Encrypted Session</span>
-          </div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+          <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-800 dark:text-champagne font-bold block mb-1">
+            Certified Gateway Session
+          </span>
+          <h1 className="text-3xl sm:text-5xl font-serif font-bold tracking-tight text-charcoal dark:text-ivory">
             Checkout
           </h1>
         </div>
 
-        {/* Step indicator */}
-        <div className="flex items-center gap-2 text-xs font-medium text-slate-500 dark:text-slate-400">
-          <span className="flex items-center gap-1 text-brand-600 dark:text-brand-400 font-bold">
-            <span className="w-5 h-5 rounded-full bg-brand-600 text-white text-[10px] flex items-center justify-center">1</span>
+        {/* Stepped Progress Bar */}
+        <div className="flex items-center gap-3 text-xs font-mono tracking-wider">
+          <span className="flex items-center gap-1.5 text-emerald-900 dark:text-champagne font-bold">
+            <span className="w-5 h-5 rounded-full bg-emerald-900 text-champagne text-[10px] flex items-center justify-center border border-champagne/40">1</span>
+            Contact
+          </span>
+          <span className="text-stone-warm dark:text-white/20">───</span>
+          <span className="flex items-center gap-1.5 text-charcoal-muted dark:text-stone-muted">
+            <span className="w-5 h-5 rounded-full border border-stone-warm dark:border-white/20 text-[10px] flex items-center justify-center">2</span>
             Details
           </span>
-          <span className="text-slate-300 dark:text-slate-700">───</span>
-          <span className="flex items-center gap-1">
-            <span className="w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-[10px] flex items-center justify-center">2</span>
-            Payoneer Portal
-          </span>
-          <span className="text-slate-300 dark:text-slate-700">───</span>
-          <span className="flex items-center gap-1">
-            <span className="w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-[10px] flex items-center justify-center">3</span>
-            Confirmation
+          <span className="text-stone-warm dark:text-white/20">───</span>
+          <span className="flex items-center gap-1.5 text-charcoal-muted dark:text-stone-muted">
+            <span className="w-5 h-5 rounded-full border border-stone-warm dark:border-white/20 text-[10px] flex items-center justify-center">3</span>
+            Payoneer
           </span>
         </div>
       </div>
 
-      {/* 2-Column Responsive Layout */}
+      {/* 2-Column Editorial Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Column: Customer & Shipping details */}
+        {/* Left: Customer Info */}
         <div className="lg:col-span-7 space-y-6">
           <CheckoutForm
             customer={customer}
@@ -186,7 +185,7 @@ export const CheckoutPage: React.FC = () => {
           />
         </div>
 
-        {/* Right Column: Order Summary + Payoneer Gateway CTA */}
+        {/* Right: Order Summary & Payoneer Section */}
         <div className="lg:col-span-5 space-y-6">
           <OrderSummary />
           <PayoneerPaymentSection

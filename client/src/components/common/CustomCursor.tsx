@@ -6,12 +6,10 @@ export const CustomCursor: React.FC = () => {
   const [isHovering, setIsHovering] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(true);
 
-  // Smooth springs for cursor position
   const cursorX = useSpring(0, { stiffness: 450, damping: 30 });
   const cursorY = useSpring(0, { stiffness: 450, damping: 30 });
 
   useEffect(() => {
-    // Only enable on desktop pointer devices
     const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -55,9 +53,9 @@ export const CustomCursor: React.FC = () => {
 
   return (
     <div className="pointer-events-none fixed inset-0 z-50 overflow-hidden">
-      {/* Outer interactive follower ring */}
+      {/* Outer champagne gold / emerald follower ring */}
       <motion.div
-        className="fixed top-0 left-0 rounded-full border border-brand-500/40 dark:border-brand-400/40 pointer-events-none z-50 backdrop-blur-[0.5px]"
+        className="fixed top-0 left-0 rounded-full border border-champagne/50 dark:border-champagne/40 pointer-events-none z-50 backdrop-blur-[0.5px]"
         style={{
           x: cursorX,
           y: cursorY,
@@ -65,16 +63,16 @@ export const CustomCursor: React.FC = () => {
           translateY: '-50%',
         }}
         animate={{
-          width: isHovering ? 46 : 26,
-          height: isHovering ? 46 : 26,
-          backgroundColor: isHovering ? 'rgba(2, 132, 199, 0.08)' : 'rgba(2, 132, 199, 0.02)',
-          borderColor: isHovering ? 'rgba(2, 132, 199, 0.6)' : 'rgba(2, 132, 199, 0.3)',
+          width: isHovering ? 44 : 24,
+          height: isHovering ? 44 : 24,
+          backgroundColor: isHovering ? 'rgba(201, 168, 106, 0.08)' : 'rgba(7, 94, 69, 0.02)',
+          borderColor: isHovering ? 'rgba(201, 168, 106, 0.8)' : 'rgba(7, 94, 69, 0.4)',
         }}
         transition={{ type: 'spring', stiffness: 350, damping: 25 }}
       />
-      {/* Central precise dot */}
+      {/* Central precise gold dot */}
       <motion.div
-        className="fixed top-0 left-0 w-1.5 h-1.5 rounded-full bg-brand-500 dark:bg-brand-400 pointer-events-none z-50"
+        className="fixed top-0 left-0 w-1.5 h-1.5 rounded-full bg-emerald-800 dark:bg-champagne pointer-events-none z-50"
         style={{
           x: cursorX,
           y: cursorY,

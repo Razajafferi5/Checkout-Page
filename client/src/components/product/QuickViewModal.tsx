@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ShoppingBag, ShieldCheck, Check, Truck, Zap } from 'lucide-react';
+import { X, ShoppingBag, ShieldCheck, Check, Truck } from 'lucide-react';
 import { Product } from '../../types';
 import { useCart } from '../../context/CartContext';
 import { useNotification } from '../../context/NotificationContext';
@@ -32,7 +32,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose
   const handleAdd = () => {
     addToCart(product, quantity);
     setIsAdded(true);
-    showNotification('success', `${product.name} added to cart`, `$${(product.price * quantity).toFixed(2)} USD`);
+    showNotification('success', `${product.name} added to bag`, `$${(product.price * quantity).toFixed(2)} USD`);
 
     setTimeout(() => {
       setIsAdded(false);
@@ -49,75 +49,71 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 bg-slate-950/70 backdrop-blur-md"
+          className="fixed inset-0 bg-charcoal/70 dark:bg-black/80 backdrop-blur-sm"
         />
 
         {/* Modal Dialog */}
         <motion.div
-          initial={{ scale: 0.92, opacity: 0, y: 20 }}
+          initial={{ scale: 0.94, opacity: 0, y: 15 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
-          exit={{ scale: 0.92, opacity: 0, y: 20 }}
+          exit={{ scale: 0.94, opacity: 0, y: 15 }}
           transition={{ type: 'spring', damping: 25, stiffness: 350 }}
-          className="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden z-10"
+          className="relative w-full max-w-2xl bg-ivory-light dark:bg-ivory-elevated rounded-3xl shadow-2xl border border-stone-warm dark:border-white/10 overflow-hidden z-10"
         >
           {/* Close button */}
           <button
             onClick={onClose}
             aria-label="Close modal"
-            className="absolute top-4 right-4 p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors z-20"
+            className="absolute top-4 right-4 p-2 rounded-full bg-stone-warm/50 dark:bg-white/5 text-charcoal dark:text-ivory hover:text-emerald-800 dark:hover:text-champagne transition-colors z-20"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
 
           <div className="grid grid-cols-1 md:grid-cols-2">
             {/* Product Image Area */}
-            <div className="relative bg-slate-100 dark:bg-slate-800/50 p-8 flex items-center justify-center min-h-[260px] md:min-h-full">
+            <div className="relative bg-stone-warm/30 dark:bg-ivory-dark/40 p-8 flex items-center justify-center min-h-[260px] md:min-h-full">
               <img
                 src={product.image}
                 alt={product.name}
-                className="max-h-64 object-contain drop-shadow-xl transform hover:scale-105 transition-transform duration-300"
+                className="max-h-60 object-contain drop-shadow-xl"
               />
-              <span className="absolute top-4 left-4 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-white dark:bg-slate-900 text-brand-600 dark:text-brand-400 border border-slate-200 dark:border-slate-700">
+              <span className="absolute top-4 left-4 px-2.5 py-1 rounded text-[9px] font-mono font-bold uppercase tracking-widest bg-ivory dark:bg-emerald-950 text-charcoal dark:text-champagne border border-stone-warm dark:border-white/10">
                 {product.category}
               </span>
             </div>
 
             {/* Product Details */}
-            <div className="p-6 md:p-8 flex flex-col justify-between">
+            <div className="p-6 sm:p-8 flex flex-col justify-between">
               <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                    In Stock ({product.stock} units)
-                  </span>
-                </div>
+                <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-emerald-800 dark:text-champagne block mb-1">
+                  Verified In Stock ({product.stock} units)
+                </span>
 
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 leading-snug">
+                <h3 className="font-serif text-2xl font-bold text-charcoal dark:text-ivory mb-3 leading-snug">
                   {product.name}
                 </h3>
 
-                <p className="text-sm text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">
+                <p className="text-xs text-charcoal-muted dark:text-stone-muted mb-6 leading-relaxed">
                   {product.description}
                 </p>
 
                 {/* Price Display */}
                 <div className="flex items-baseline gap-2 mb-6">
-                  <span className="text-3xl font-extrabold text-slate-900 dark:text-white font-mono">
+                  <span className="font-mono text-3xl font-extrabold text-charcoal dark:text-ivory">
                     ${product.price.toFixed(2)}
                   </span>
-                  <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 font-mono">
+                  <span className="text-xs font-mono text-charcoal-muted dark:text-stone-muted">
                     {product.currency}
                   </span>
                 </div>
 
-                {/* Micro guarantees */}
-                <div className="grid grid-cols-2 gap-2 py-3 border-y border-slate-100 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400 mb-6">
-                  <div className="flex items-center gap-1.5">
-                    <Truck className="w-3.5 h-3.5 text-brand-500" />
-                    <span>Free shipping $150+</span>
+                <div className="grid grid-cols-2 gap-2 py-3 border-y border-stone-warm dark:border-white/10 text-xs text-charcoal-muted dark:text-stone-muted mb-6">
+                  <div className="flex items-center gap-1.5 font-mono text-[11px]">
+                    <Truck className="w-3.5 h-3.5 text-emerald-800 dark:text-champagne" />
+                    <span>Free ship $150+</span>
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+                  <div className="flex items-center gap-1.5 font-mono text-[11px]">
+                    <ShieldCheck className="w-3.5 h-3.5 text-champagne" />
                     <span>Payoneer Verified</span>
                   </div>
                 </div>
@@ -126,21 +122,23 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose
               {/* Quantity Picker & Add CTA */}
               <div>
                 <div className="flex items-center gap-3 mb-4">
-                  <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">Quantity:</span>
-                  <div className="flex items-center border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-800">
+                  <span className="text-xs font-mono uppercase tracking-wider text-charcoal dark:text-ivory font-semibold">
+                    Quantity:
+                  </span>
+                  <div className="flex items-center border border-stone-warm dark:border-white/10 rounded-lg overflow-hidden bg-ivory dark:bg-ivory-dark">
                     <button
                       onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                      className="px-3 py-1 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-bold transition-colors"
+                      className="px-3 py-1 text-charcoal dark:text-ivory hover:bg-stone-warm dark:hover:bg-ivory-elevated text-xs font-mono font-bold transition-colors"
                       disabled={quantity <= 1}
                     >
                       -
                     </button>
-                    <span className="px-4 py-1 text-xs font-mono font-bold text-slate-900 dark:text-white">
+                    <span className="px-3.5 py-1 text-xs font-mono font-bold text-charcoal dark:text-ivory">
                       {quantity}
                     </span>
                     <button
                       onClick={() => setQuantity(q => Math.min(product.stock, q + 1))}
-                      className="px-3 py-1 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-bold transition-colors"
+                      className="px-3 py-1 text-charcoal dark:text-ivory hover:bg-stone-warm dark:hover:bg-ivory-elevated text-xs font-mono font-bold transition-colors"
                       disabled={quantity >= product.stock}
                     >
                       +
@@ -152,21 +150,21 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose
                   whileTap={{ scale: 0.96 }}
                   onClick={handleAdd}
                   disabled={isAdded || product.stock === 0}
-                  className={`w-full py-3.5 px-6 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 shadow-lg transition-all duration-200 ${
+                  className={`w-full py-3.5 px-6 rounded-lg font-mono text-xs uppercase tracking-wider font-semibold flex items-center justify-center gap-2 shadow-emerald transition-all duration-200 ${
                     isAdded
-                      ? 'bg-emerald-600 text-white'
-                      : 'bg-brand-600 hover:bg-brand-500 dark:bg-brand-500 dark:hover:bg-brand-400 text-white shadow-glow'
+                      ? 'bg-emerald-800 text-ivory'
+                      : 'bg-emerald-900 hover:bg-emerald-800 dark:bg-emerald-800 dark:hover:bg-emerald-700 text-ivory border border-emerald-700/40'
                   }`}
                 >
                   {isAdded ? (
                     <>
-                      <Check className="w-4 h-4" />
-                      <span>Added to Cart!</span>
+                      <Check className="w-4 h-4 text-champagne" />
+                      <span>Added to Bag</span>
                     </>
                   ) : (
                     <>
-                      <ShoppingBag className="w-4 h-4" />
-                      <span>Add to Cart • ${(product.price * quantity).toFixed(2)}</span>
+                      <ShoppingBag className="w-4 h-4 text-champagne" />
+                      <span>Add to Bag • ${(product.price * quantity).toFixed(2)}</span>
                     </>
                   )}
                 </motion.button>

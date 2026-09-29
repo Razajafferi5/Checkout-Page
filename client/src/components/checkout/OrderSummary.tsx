@@ -17,54 +17,51 @@ export const OrderSummary: React.FC = () => {
 
   const handleApplyCoupon = (e: React.FormEvent) => {
     e.preventDefault();
-    if (couponCode.trim().toUpperCase() === 'PAYFLOW15') {
-      setAppliedCoupon('PAYFLOW15 (-$15.00)');
-    } else if (couponCode.trim().length > 0) {
-      // Demo simulated promo
+    if (couponCode.trim().length > 0) {
       setAppliedCoupon(`${couponCode.trim().toUpperCase()} (-$15.00)`);
     }
   };
 
   return (
-    <div className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-subtle p-6 space-y-6 sticky top-24">
-      {/* Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+    <div className="rounded-2xl bg-ivory-light dark:bg-ivory-elevated border border-stone-warm dark:border-white/10 shadow-subtle p-7 space-y-6 sticky top-24">
+      {/* Luxury Receipt Header */}
+      <div className="flex items-center justify-between pb-4 border-b border-stone-warm dark:border-white/10">
         <div>
-          <h3 className="font-bold text-slate-900 dark:text-white text-base">Order Summary</h3>
-          <p className="text-[11px] text-slate-400">Server verified calculations</p>
+          <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-800 dark:text-champagne font-bold block mb-0.5">
+            Verified Receipt
+          </span>
+          <h3 className="font-serif text-2xl font-bold text-charcoal dark:text-ivory">
+            Order Summary
+          </h3>
         </div>
-        <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-mono">
+        <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded bg-stone-warm/60 dark:bg-ivory-dark text-charcoal dark:text-champagne border border-stone-warm dark:border-white/10">
           {totalItemsCount} {totalItemsCount === 1 ? 'item' : 'items'}
         </span>
       </div>
 
-      {/* Item thumbnails */}
-      <div className="space-y-3.5 max-h-64 overflow-y-auto pr-1 divide-y divide-slate-100 dark:divide-slate-800/60">
+      {/* Itemized Line Items */}
+      <div className="space-y-4 max-h-60 overflow-y-auto pr-1 divide-y divide-stone-warm/60 dark:divide-white/5">
         {cart.map(({ product, quantity }) => (
-          <div key={product._id} className="pt-3 first:pt-0 flex items-center gap-3">
-            <div className="relative shrink-0">
-              <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-800 p-1.5 flex items-center justify-center border border-slate-200/80 dark:border-slate-700/80">
+          <div key={product._id} className="pt-3 first:pt-0 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-11 h-11 rounded-lg bg-stone-warm/30 dark:bg-ivory-dark p-1 flex items-center justify-center border border-stone-warm dark:border-white/10 shrink-0">
                 <img
                   src={product.image}
                   alt={product.name}
                   className="max-h-full max-w-full object-contain"
                 />
               </div>
-              <span className="absolute -top-1.5 -right-1.5 bg-slate-900 dark:bg-slate-700 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-                {quantity}
-              </span>
+              <div className="min-w-0">
+                <h4 className="font-serif text-xs font-bold text-charcoal dark:text-ivory truncate">
+                  {product.name}
+                </h4>
+                <p className="text-[11px] font-mono text-charcoal-muted dark:text-stone-muted">
+                  {quantity} × ${product.price.toFixed(2)}
+                </p>
+              </div>
             </div>
 
-            <div className="flex-1 min-w-0">
-              <h4 className="text-xs font-semibold text-slate-900 dark:text-white truncate">
-                {product.name}
-              </h4>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
-                {quantity} × ${product.price.toFixed(2)}
-              </p>
-            </div>
-
-            <span className="text-xs font-bold text-slate-900 dark:text-white font-mono">
+            <span className="font-mono text-xs font-bold text-charcoal dark:text-ivory shrink-0">
               ${(product.price * quantity).toFixed(2)}
             </span>
           </div>
@@ -75,18 +72,18 @@ export const OrderSummary: React.FC = () => {
       <div>
         <form onSubmit={handleApplyCoupon} className="flex gap-2">
           <div className="relative flex-1">
-            <Tag className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Tag className="w-3.5 h-3.5 text-stone-muted absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={couponCode}
               onChange={e => setCouponCode(e.target.value)}
-              placeholder="Promo code (e.g. PAYFLOW15)"
-              className="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white bg-slate-50/50 dark:bg-slate-800/50 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-brand-500 uppercase font-mono"
+              placeholder="PROMO CODE"
+              className="w-full pl-8 pr-3 py-2 rounded-lg border border-stone-warm dark:border-white/10 text-xs text-charcoal dark:text-ivory bg-ivory dark:bg-ivory-dark placeholder-stone-muted focus:outline-none focus:border-champagne font-mono uppercase"
             />
           </div>
           <button
             type="submit"
-            className="px-3.5 py-2 bg-slate-900 dark:bg-slate-800 hover:bg-slate-800 dark:hover:bg-slate-700 text-white rounded-xl text-xs font-semibold transition-colors"
+            className="px-4 py-2 bg-emerald-900 hover:bg-emerald-800 dark:bg-emerald-800 text-ivory rounded-lg text-xs font-mono uppercase tracking-wider font-semibold transition-colors border border-emerald-700/40"
           >
             Apply
           </button>
@@ -98,16 +95,16 @@ export const OrderSummary: React.FC = () => {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="mt-2 flex items-center justify-between text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 rounded-lg border border-emerald-200 dark:border-emerald-800/60"
+              className="mt-2 flex items-center justify-between text-[11px] font-mono text-emerald-800 dark:text-champagne bg-stone-warm/50 dark:bg-ivory-dark px-2.5 py-1 rounded border border-stone-warm dark:border-white/10"
             >
               <span className="flex items-center gap-1">
-                <Check className="w-3 h-3" />
-                Coupon Applied: {appliedCoupon}
+                <Check className="w-3 h-3 text-champagne" />
+                Applied: {appliedCoupon}
               </span>
               <button
                 type="button"
                 onClick={() => setAppliedCoupon(null)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-white"
+                className="text-stone-muted hover:text-charcoal dark:hover:text-white"
               >
                 Remove
               </button>
@@ -117,56 +114,58 @@ export const OrderSummary: React.FC = () => {
       </div>
 
       {/* Numerical Breakdown */}
-      <div className="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-2 text-xs">
-        <div className="flex justify-between text-slate-600 dark:text-slate-400">
-          <span>Subtotal</span>
-          <span className="font-semibold text-slate-900 dark:text-white font-mono">
+      <div className="pt-4 border-t border-stone-warm dark:border-white/10 space-y-2 text-xs">
+        <div className="flex justify-between text-charcoal-muted dark:text-stone-muted">
+          <span className="font-mono uppercase text-[10px] tracking-wider">Subtotal</span>
+          <span className="font-mono font-semibold text-charcoal dark:text-ivory">
             ${subtotal.toFixed(2)}
           </span>
         </div>
 
-        <div className="flex justify-between text-slate-600 dark:text-slate-400">
-          <span>Insured Shipping</span>
-          <span className="font-semibold text-slate-900 dark:text-white font-mono">
+        <div className="flex justify-between text-charcoal-muted dark:text-stone-muted">
+          <span className="font-mono uppercase text-[10px] tracking-wider">Delivery</span>
+          <span className="font-mono font-semibold text-charcoal dark:text-ivory">
             {shipping === 0 ? (
-              <span className="text-emerald-600 dark:text-emerald-400 font-bold">FREE</span>
+              <span className="text-emerald-800 dark:text-champagne font-bold">COMPLIMENTARY</span>
             ) : (
               `$${shipping.toFixed(2)}`
             )}
           </span>
         </div>
 
-        <div className="flex justify-between text-slate-600 dark:text-slate-400">
-          <span>Sales Tax (8.25%)</span>
-          <span className="font-semibold text-slate-900 dark:text-white font-mono">
+        <div className="flex justify-between text-charcoal-muted dark:text-stone-muted">
+          <span className="font-mono uppercase text-[10px] tracking-wider">Sales Tax (8.25%)</span>
+          <span className="font-mono font-semibold text-charcoal dark:text-ivory">
             ${estimatedTax.toFixed(2)}
           </span>
         </div>
 
         {discount > 0 && (
-          <div className="flex justify-between text-emerald-600 dark:text-emerald-400 font-medium">
-            <span>Special Discount</span>
+          <div className="flex justify-between text-emerald-800 dark:text-champagne font-medium">
+            <span className="font-mono uppercase text-[10px] tracking-wider">Promo Discount</span>
             <span className="font-mono font-bold">-${discount.toFixed(2)}</span>
           </div>
         )}
 
         {/* Total Highlight */}
-        <div className="border-t border-slate-200 dark:border-slate-700/80 pt-3 flex justify-between items-baseline">
+        <div className="border-t border-stone-warm dark:border-white/15 pt-4 flex justify-between items-baseline">
           <div>
-            <span className="font-bold text-slate-900 dark:text-white block text-sm">
+            <span className="font-serif text-lg font-bold text-charcoal dark:text-ivory block">
               Total Amount
             </span>
-            <span className="text-[10px] text-slate-400">Tax & Shipping included</span>
+            <span className="text-[10px] font-mono text-charcoal-muted dark:text-stone-muted">
+              Includes applicable taxes & delivery
+            </span>
           </div>
           <div className="text-right">
-            <span className="text-[10px] font-mono font-bold text-slate-400 mr-1.5 uppercase">
+            <span className="text-[10px] font-mono uppercase text-champagne mr-1.5 font-bold">
               USD
             </span>
             <motion.span
               key={total}
               initial={{ scale: 1.05 }}
               animate={{ scale: 1 }}
-              className="font-extrabold text-2xl text-slate-900 dark:text-white tracking-tight font-mono"
+              className="font-mono text-2xl font-extrabold text-emerald-900 dark:text-champagne tracking-tight"
             >
               ${total.toFixed(2)}
             </motion.span>
@@ -175,9 +174,9 @@ export const OrderSummary: React.FC = () => {
       </div>
 
       {/* Trust Guarantee Box */}
-      <div className="rounded-xl p-3 bg-slate-50 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-700/60 flex items-start gap-2.5 text-[11px] text-slate-600 dark:text-slate-400">
-        <Truck className="w-4 h-4 text-brand-500 shrink-0 mt-0.5" />
-        <span>Free insured express shipping on orders over $150. Protected by Payoneer buyer guarantee.</span>
+      <div className="rounded-xl p-3.5 bg-stone-warm/30 dark:bg-ivory-dark/60 border border-stone-warm dark:border-white/10 flex items-start gap-2.5 text-[11px] text-charcoal-muted dark:text-stone-muted leading-relaxed">
+        <Truck className="w-4 h-4 text-champagne shrink-0 mt-0.5" />
+        <span>Complimentary insured shipping on all orders over $150. Protected by Payoneer buyer settlement guarantee.</span>
       </div>
     </div>
   );

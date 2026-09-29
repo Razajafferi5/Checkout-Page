@@ -28,64 +28,64 @@ export const HomePage: React.FC = () => {
       <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <motion.div
           whileHover={{ y: -4 }}
-          className="rounded-2xl p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-subtle flex flex-col justify-between"
+          className="rounded-2xl p-7 bg-ivory dark:bg-ivory-dark border border-stone-warm/80 dark:border-white/10 shadow-subtle flex flex-col justify-between transition-shadow hover:shadow-elevated"
         >
           <div>
-            <div className="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-950/60 text-brand-600 dark:text-brand-400 flex items-center justify-center mb-4">
+            <div className="w-11 h-11 rounded-xl bg-emerald-900/10 dark:bg-emerald-950/60 text-emerald-800 dark:text-champagne flex items-center justify-center mb-5 border border-emerald-900/15 dark:border-champagne/20">
               <Lock className="w-5 h-5" />
             </div>
-            <h3 className="font-bold text-slate-900 dark:text-white text-base mb-1">
+            <h3 className="font-serif text-lg font-bold text-charcoal dark:text-ivory mb-2">
               Zero PAN / CVV Storage
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-              Customers complete card payments directly within Payoneer's PCI-DSS Level 1 certified hosted environment. Zero sensitive cardholder data is stored on our servers.
+            <p className="text-xs text-charcoal/70 dark:text-ivory/60 leading-relaxed font-sans">
+              Card transactions resolve directly within Payoneer's PCI-DSS Level 1 certified hosted vault. No sensitive cardholder numbers ever touch our servers.
             </p>
           </div>
-          <div className="pt-4 mt-4 border-t border-slate-100 dark:border-slate-800 flex items-center gap-1.5 text-[11px] font-semibold text-brand-600 dark:text-brand-400">
-            <CheckCircle2 className="w-3.5 h-3.5" />
+          <div className="pt-4 mt-5 border-t border-stone-warm/80 dark:border-white/10 flex items-center gap-2 text-[11px] font-semibold text-emerald-800 dark:text-champagne font-mono">
+            <CheckCircle2 className="w-3.5 h-3.5 text-champagne-dark dark:text-champagne" />
             <span>SAQ A Compliance Eligible</span>
           </div>
         </motion.div>
 
         <motion.div
           whileHover={{ y: -4 }}
-          className="rounded-2xl p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-subtle flex flex-col justify-between"
+          className="rounded-2xl p-7 bg-ivory dark:bg-ivory-dark border border-stone-warm/80 dark:border-white/10 shadow-subtle flex flex-col justify-between transition-shadow hover:shadow-elevated"
         >
           <div>
-            <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-4">
+            <div className="w-11 h-11 rounded-xl bg-champagne-pale dark:bg-champagne/10 text-champagne-dark dark:text-champagne flex items-center justify-center mb-5 border border-champagne/30">
               <Zap className="w-5 h-5" />
             </div>
-            <h3 className="font-bold text-slate-900 dark:text-white text-base mb-1">
-              Zero-Trust Mathematical Engine
+            <h3 className="font-serif text-lg font-bold text-charcoal dark:text-ivory mb-2">
+              Zero-Trust Pricing Engine
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-              Product prices, taxes (8.25%), discounts, and shipping tiers are validated and computed strictly on the backend. Frontend prices are never trusted.
+            <p className="text-xs text-charcoal/70 dark:text-ivory/60 leading-relaxed font-sans">
+              Unit prices, sales tax calculations, tiered shipping rates, and discounts are computed strictly in verified server memory.
             </p>
           </div>
-          <div className="pt-4 mt-4 border-t border-slate-100 dark:border-slate-800 flex items-center gap-1.5 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
-            <CheckCircle2 className="w-3.5 h-3.5" />
-            <span>Tamper-Proof Calculations</span>
+          <div className="pt-4 mt-5 border-t border-stone-warm/80 dark:border-white/10 flex items-center gap-2 text-[11px] font-semibold text-emerald-800 dark:text-champagne font-mono">
+            <CheckCircle2 className="w-3.5 h-3.5 text-champagne-dark dark:text-champagne" />
+            <span>Tamper-Proof Ledger</span>
           </div>
         </motion.div>
 
         <motion.div
           whileHover={{ y: -4 }}
-          className="rounded-2xl p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-subtle flex flex-col justify-between"
+          className="rounded-2xl p-7 bg-ivory dark:bg-ivory-dark border border-stone-warm/80 dark:border-white/10 shadow-subtle flex flex-col justify-between transition-shadow hover:shadow-elevated"
         >
           <div>
-            <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-4">
+            <div className="w-11 h-11 rounded-xl bg-stone-warm/60 dark:bg-white/5 text-charcoal dark:text-ivory flex items-center justify-center mb-5 border border-stone-muted dark:border-white/10">
               <RefreshCw className="w-5 h-5" />
             </div>
-            <h3 className="font-bold text-slate-900 dark:text-white text-base mb-1">
-              Provider Pattern & Mock Mode
+            <h3 className="font-serif text-lg font-bold text-charcoal dark:text-ivory mb-2">
+              Provider Abstraction
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-              Instantly toggle between isolated Mock Sandbox simulation and official Payoneer Hosted Checkout via a single environment variable (`PAYMENT_MODE`).
+            <p className="text-xs text-charcoal/70 dark:text-ivory/60 leading-relaxed font-sans">
+              Instantly toggle between isolated Mock Sandbox simulation and official Payoneer Hosted Checkout via environment configuration.
             </p>
           </div>
-          <div className="pt-4 mt-4 border-t border-slate-100 dark:border-slate-800 flex items-center gap-1.5 text-[11px] font-semibold text-amber-600 dark:text-amber-400">
-            <CheckCircle2 className="w-3.5 h-3.5" />
-            <span>Offline Demo Ready</span>
+          <div className="pt-4 mt-5 border-t border-stone-warm/80 dark:border-white/10 flex items-center gap-2 text-[11px] font-semibold text-emerald-800 dark:text-champagne font-mono">
+            <CheckCircle2 className="w-3.5 h-3.5 text-champagne-dark dark:text-champagne" />
+            <span>Instant Sandbox Mode</span>
           </div>
         </motion.div>
       </section>
