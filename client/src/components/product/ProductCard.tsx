@@ -37,14 +37,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView, 
       whileHover={{ y: -4 }}
       transition={{ duration: 0.3 }}
       onClick={() => onQuickView(product)}
-      className={`group relative rounded-2xl bg-ivory-light dark:bg-ivory-elevated border border-stone-warm dark:border-white/10 hover:border-champagne/80 dark:hover:border-champagne/80 overflow-hidden shadow-subtle hover:shadow-elevated transition-all duration-300 flex flex-col justify-between cursor-pointer ${
-        featured ? 'md:col-span-2 md:row-span-2' : ''
-      }`}
+      className="group relative rounded-2xl bg-ivory-light dark:bg-ivory-elevated border border-stone-warm dark:border-white/10 hover:border-champagne/80 dark:hover:border-champagne/80 overflow-hidden shadow-subtle hover:shadow-elevated transition-all duration-300 flex flex-col justify-between cursor-pointer"
     >
       {/* Product Image Area */}
-      <div className={`relative bg-stone-warm/30 dark:bg-ivory-dark/40 p-6 flex items-center justify-center overflow-hidden ${
-        featured ? 'min-h-[280px] md:min-h-[380px]' : 'aspect-[4/3]'
-      }`}>
+      <div className="relative bg-stone-warm/30 dark:bg-ivory-dark/40 p-6 flex items-center justify-center overflow-hidden aspect-[4/3]">
         {/* Category Pill */}
         <span className="absolute top-4 left-4 px-2.5 py-1 rounded text-[9px] font-mono font-bold uppercase tracking-widest bg-ivory dark:bg-emerald-950 text-charcoal-muted dark:text-stone-muted border border-stone-warm dark:border-white/10 z-10">
           {product.category}
@@ -55,9 +51,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView, 
           src={product.image}
           alt={product.name}
           category={product.category}
-          className={`object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-500 ease-out ${
-            featured ? 'max-h-64 md:max-h-80' : 'max-h-40'
-          }`}
+          className="max-h-40 object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-500 ease-out"
           loading="eager"
         />
 
@@ -74,9 +68,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView, 
       <div className="p-6 flex-1 flex flex-col justify-between">
         <div>
           <div className="flex items-start justify-between gap-2 mb-1.5">
-            <h3 className={`font-serif font-bold text-charcoal dark:text-ivory group-hover:text-emerald-800 dark:group-hover:text-champagne transition-colors ${
-              featured ? 'text-xl sm:text-2xl' : 'text-base'
-            }`}>
+            <h3 className="font-serif font-bold text-charcoal dark:text-ivory group-hover:text-emerald-800 dark:group-hover:text-champagne transition-colors text-base">
               {product.name}
             </h3>
           </div>

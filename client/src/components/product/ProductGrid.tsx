@@ -63,35 +63,34 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ products, loading }) =
 
       {/* Editorial Skeletons */}
       {loading && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="md:col-span-2 md:row-span-2 rounded-2xl editorial-glass p-8 min-h-[420px] flex flex-col justify-between">
-            <div className="editorial-shimmer rounded-xl aspect-[16/9] mb-4" />
-            <div className="space-y-2">
-              <div className="editorial-shimmer h-6 rounded w-1/3" />
-              <div className="editorial-shimmer h-4 rounded w-1/2" />
-            </div>
-          </div>
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="rounded-2xl editorial-glass p-6 min-h-[260px] flex flex-col justify-between">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="rounded-2xl editorial-glass p-6 min-h-[320px] flex flex-col justify-between">
               <div className="editorial-shimmer rounded-xl aspect-[4/3] mb-4" />
-              <div className="editorial-shimmer h-4 rounded w-2/3" />
+              <div className="space-y-2">
+                <div className="editorial-shimmer h-5 rounded w-2/3" />
+                <div className="editorial-shimmer h-3.5 rounded w-1/2" />
+              </div>
+              <div className="pt-4 border-t border-stone-warm/80 dark:border-white/10 flex items-center justify-between">
+                <div className="editorial-shimmer h-5 rounded w-16" />
+                <div className="editorial-shimmer h-8 rounded w-20" />
+              </div>
             </div>
           ))}
         </div>
       )}
 
-      {/* Asymmetrical Editorial Product Layout */}
+      {/* Symmetrical Balanced Product Grid */}
       {!loading && (
         <motion.div
           layout
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           <AnimatePresence>
-            {filteredProducts.map((product, idx) => (
+            {filteredProducts.map((product) => (
               <ProductCard
                 key={product._id}
                 product={product}
-                featured={idx === 0 && selectedCategory === 'All'}
                 onQuickView={p => setQuickViewProduct(p)}
               />
             ))}
