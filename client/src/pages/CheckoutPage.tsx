@@ -141,7 +141,7 @@ export const CheckoutPage: React.FC = () => {
   }
 
   return (
-    <div className="py-10 space-y-10">
+    <div className="py-10 pb-24 space-y-10">
       {/* Checkout Editorial Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-stone-warm dark:border-white/10">
         <div>
@@ -174,7 +174,7 @@ export const CheckoutPage: React.FC = () => {
 
       {/* 2-Column Editorial Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left: Customer Info */}
+        {/* Left: Customer & Billing Info */}
         <div className="lg:col-span-7 space-y-6">
           <CheckoutForm
             customer={customer}
@@ -185,13 +185,13 @@ export const CheckoutPage: React.FC = () => {
           />
         </div>
 
-        {/* Right: Order Summary & Payoneer Section */}
+        {/* Right: Payoneer Payment Section & Order Summary */}
         <div className="lg:col-span-5 space-y-6">
-          <OrderSummary />
-          <PayoneerPaymentSection
+          <PayoneerPaymentSection />
+          <OrderSummary
             onPay={handleInitiatePayment}
             loading={loading}
-            total={total}
+            disabled={loading}
           />
         </div>
       </div>

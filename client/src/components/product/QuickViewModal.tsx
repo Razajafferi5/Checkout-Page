@@ -4,6 +4,7 @@ import { X, ShoppingBag, ShieldCheck, Check, Truck } from 'lucide-react';
 import { Product } from '../../types';
 import { useCart } from '../../context/CartContext';
 import { useNotification } from '../../context/NotificationContext';
+import { ProductImage } from '../common/ProductImage';
 
 interface QuickViewModalProps {
   product: Product | null;
@@ -69,15 +70,17 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose
             <X className="w-4 h-4" />
           </button>
 
-          <div className="grid grid-cols-1 md:grid-cols-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 items-center">
             {/* Product Image Area */}
-            <div className="relative bg-stone-warm/30 dark:bg-ivory-dark/40 p-8 flex items-center justify-center min-h-[260px] md:min-h-full">
-              <img
+            <div className="relative bg-stone-warm/30 dark:bg-ivory-dark/40 p-6 sm:p-8 flex items-center justify-center min-h-[220px] max-h-[340px] md:max-h-none md:h-full overflow-hidden">
+              <ProductImage
                 src={product.image}
                 alt={product.name}
-                className="max-h-60 object-contain drop-shadow-xl"
+                category={product.category}
+                className="max-h-60 sm:max-h-68 w-auto h-auto object-contain drop-shadow-xl"
+                loading="eager"
               />
-              <span className="absolute top-4 left-4 px-2.5 py-1 rounded text-[9px] font-mono font-bold uppercase tracking-widest bg-ivory dark:bg-emerald-950 text-charcoal dark:text-champagne border border-stone-warm dark:border-white/10">
+              <span className="absolute top-4 left-4 px-2.5 py-1 rounded text-[9px] font-mono font-bold uppercase tracking-widest bg-ivory dark:bg-emerald-950 text-charcoal dark:text-champagne border border-stone-warm dark:border-white/10 z-10">
                 {product.category}
               </span>
             </div>

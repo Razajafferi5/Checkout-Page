@@ -3,32 +3,34 @@ import { ShieldCheck, Lock, CreditCard, ArrowRight, Loader2, CheckCircle2 } from
 import { motion } from 'framer-motion';
 
 interface PayoneerPaymentSectionProps {
-  onPay: () => void;
-  loading: boolean;
+  onPay?: () => void;
+  loading?: boolean;
   disabled?: boolean;
-  total: number;
+  total?: number;
+  showPayButton?: boolean;
 }
 
 export const PayoneerPaymentSection: React.FC<PayoneerPaymentSectionProps> = ({
   onPay,
-  loading,
+  loading = false,
   disabled = false,
-  total,
+  total = 0,
+  showPayButton = false,
 }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.3 }}
-      className="rounded-2xl bg-ivory-light dark:bg-ivory-elevated border border-stone-warm dark:border-white/10 shadow-subtle p-7 space-y-6"
+      transition={{ delay: 0.2 }}
+      className="rounded-2xl bg-ivory-light dark:bg-ivory-elevated border border-stone-warm dark:border-white/10 shadow-subtle p-7 space-y-6 h-auto"
     >
       <div className="flex items-center justify-between pb-4 border-b border-stone-warm dark:border-white/10">
         <div className="flex items-center gap-3">
           <span className="w-6 h-6 rounded-full bg-emerald-900 text-champagne font-mono text-xs font-bold flex items-center justify-center border border-champagne/30">
-            04
+            03
           </span>
           <h3 className="font-mono text-xs font-bold uppercase tracking-widest text-charcoal dark:text-ivory">
-            Secure Payment
+            Payoneer Payment Gateway
           </h3>
         </div>
         <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-800 dark:text-champagne bg-stone-warm/50 dark:bg-ivory-dark px-2.5 py-1 rounded border border-stone-warm dark:border-white/10 flex items-center gap-1.5 font-bold">
@@ -99,45 +101,48 @@ export const PayoneerPaymentSection: React.FC<PayoneerPaymentSectionProps> = ({
         </div>
       </div>
 
-      {/* Main Pay CTA Button */}
-      <motion.button
-        whileHover={{ scale: disabled || loading ? 1 : 1.01 }}
-        whileTap={{ scale: disabled || loading ? 1 : 0.98 }}
-        onClick={onPay}
-        disabled={disabled || loading || total <= 0}
-        className="w-full py-4 px-6 rounded-lg bg-emerald-900 hover:bg-emerald-800 dark:bg-emerald-800 dark:hover:bg-emerald-700 text-ivory font-mono text-xs uppercase tracking-wider font-bold flex items-center justify-center gap-2 shadow-emerald transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed border border-emerald-700/50 group"
-      >
-        {loading ? (
-          <div className="flex items-center gap-2.5">
-            <Loader2 className="w-4 h-4 animate-spin text-champagne" />
-            <span>Processing Handshake...</span>
-          </div>
-        ) : (
-          <div className="flex items-center justify-between w-full">
-            <div className="flex items-center gap-2">
-              <Lock className="w-3.5 h-3.5 text-champagne" />
-              <span>Pay Securely</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-extrabold text-champagne">${total.toFixed(2)} USD</span>
-              <ArrowRight className="w-4 h-4 text-champagne group-hover:translate-x-1 transition-transform" />
-            </div>
-          </div>
-        )}
-      </motion.button>
+      {/* Optional Pay CTA Button if explicitly requested */}
+      {showPayButton && onPay && (
+        <div className="space-y-3">
+          <motion.button
+            whileHover={{ scale: disabled || loading ? 1 : 1.01 }}
+            whileTap={{ scale: disabled || loading ? 1 : 0.98 }}
+            onClick={onPay}
+            disabled={disabled || loading || total <= 0}
+            className="w-full py-4 px-6 rounded-lg bg-emerald-900 hover:bg-emerald-800 dark:bg-emerald-800 dark:hover:bg-emerald-700 text-ivory font-mono text-xs uppercase tracking-wider font-bold flex items-center justify-center gap-2 shadow-emerald transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed border border-emerald-700/50 group"
+          >
+            {loading ? (
+              <div className="flex items-center gap-2.5">
+                <Loader2 className="w-4 h-4 animate-spin text-champagne" />
+                <span>Processing Handshake...</span>
+              </div>
+            ) : (
+              <div className="flex items-center justify-between w-full">
+                <div className="flex items-center gap-2">
+                  <Lock className="w-3.5 h-3.5 text-champagne" />
+                  <span>Pay Securely</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-extrabold text-champagne">${total.toFixed(2)} USD</span>
+                  <ArrowRight className="w-4 h-4 text-champagne group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+            )}
+          </motion.button>
 
-      {/* Trust Guarantees */}
-      <div className="flex flex-wrap items-center justify-center gap-4 text-[11px] font-mono text-charcoal-muted dark:text-stone-muted">
-        <span className="flex items-center gap-1">
-          <CheckCircle2 className="w-3.5 h-3.5 text-champagne" />
-          Zero Surcharges
-        </span>
-        <span className="opacity-40">•</span>
-        <span className="flex items-center gap-1">
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-800 dark:text-champagne" />
-          Payoneer Settlement Guarantee
-        </span>
-      </div>
+          <div className="flex flex-wrap items-center justify-center gap-4 text-[11px] font-mono text-charcoal-muted dark:text-stone-muted">
+            <span className="flex items-center gap-1">
+              <CheckCircle2 className="w-3.5 h-3.5 text-champagne" />
+              Zero Surcharges
+            </span>
+            <span className="opacity-40">•</span>
+            <span className="flex items-center gap-1">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-800 dark:text-champagne" />
+              Payoneer Settlement Guarantee
+            </span>
+          </div>
+        </div>
+      )}
     </motion.div>
   );
 };

@@ -4,6 +4,7 @@ import { Plus, Check, Eye } from 'lucide-react';
 import { Product } from '../../types';
 import { useCart } from '../../context/CartContext';
 import { useNotification } from '../../context/NotificationContext';
+import { ProductImage } from '../common/ProductImage';
 
 interface ProductCardProps {
   product: Product;
@@ -50,12 +51,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView, 
         </span>
 
         {/* Product Image */}
-        <motion.img
+        <ProductImage
           src={product.image}
           alt={product.name}
+          category={product.category}
           className={`object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-500 ease-out ${
             featured ? 'max-h-64 md:max-h-80' : 'max-h-40'
           }`}
+          loading="eager"
         />
 
         {/* Editorial Quick View Overlay */}

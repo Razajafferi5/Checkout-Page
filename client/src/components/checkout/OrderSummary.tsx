@@ -1,9 +1,20 @@
 import React, { useState } from 'react';
 import { useCart } from '../../context/CartContext';
-import { Tag, Truck, ShieldCheck, Check } from 'lucide-react';
+import { Tag, Truck, ShieldCheck, Check, Lock, ArrowRight, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ProductImage } from '../common/ProductImage';
 
-export const OrderSummary: React.FC = () => {
+interface OrderSummaryProps {
+  onPay?: () => void;
+  loading?: boolean;
+  disabled?: boolean;
+}
+
+export const OrderSummary: React.FC<OrderSummaryProps> = ({
+  onPay,
+  loading = false,
+  disabled = false,
+}) => {
   const { cart, subtotal } = useCart();
   const [couponCode, setCouponCode] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
@@ -23,7 +34,7 @@ export const OrderSummary: React.FC = () => {
   };
 
   return (
-    <div className="rounded-2xl bg-ivory-light dark:bg-ivory-elevated border border-stone-warm dark:border-white/10 shadow-subtle p-7 space-y-6 sticky top-24">
+    <div className="relative rounded-2xl bg-ivory-light dark:bg-ivory-elevated border border-stone-warm dark:border-white/10 shadow-subtle p-7 space-y-6 h-auto">
       {/* Luxury Receipt Header */}
       <div className="flex items-center justify-between pb-4 border-b border-stone-warm dark:border-white/10">
         <div>
@@ -44,10 +55,11 @@ export const OrderSummary: React.FC = () => {
         {cart.map(({ product, quantity }) => (
           <div key={product._id} className="pt-3 first:pt-0 flex items-center justify-between gap-3">
             <div className="flex items-center gap-3 min-w-0">
-              <div className="w-11 h-11 rounded-lg bg-stone-warm/30 dark:bg-ivory-dark p-1 flex items-center justify-center border border-stone-warm dark:border-white/10 shrink-0">
-                <img
+              <div className="w-11 h-11 rounded-lg bg-stone-warm/30 dark:bg-ivory-dark p-1 flex items-center justify-center border border-stone-warm dark:border-white/10 shrink-0 overflow-hidden">
+                <ProductImage
                   src={product.image}
                   alt={product.name}
+                  category={product.category}
                   className="max-h-full max-w-full object-contain"
                 />
               </div>
@@ -178,6 +190,50 @@ export const OrderSummary: React.FC = () => {
         <Truck className="w-4 h-4 text-champagne shrink-0 mt-0.5" />
         <span>Complimentary insured shipping on all orders over $150. Protected by Payoneer buyer settlement guarantee.</span>
       </div>
+
+      {/* Pay Securely Button */}
+      {onPay && (
+        <div className="pt-2 space-y-3">
+          <motion.button
+            whileHover={{ scale: disabled || loading ? 1 : 1.01 }}
+            whileTap={{ scale: disabled || loading ? 1 : 0.98 }}
+            onClick={onPay}
+            disabled={disabled || loading || total <= 0}
+            className="w-full py-4 px-6 rounded-lg bg-emerald-900 hover:bg-emerald-800 dark:bg-emerald-800 dark:hover:bg-emerald-700 text-ivory font-mono text-xs uppercase tracking-wider font-bold flex items-center justify-center gap-2 shadow-emerald transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed border border-emerald-700/50 group cursor-pointer"
+          >
+            {loading ? (
+              <div className="flex items-center gap-2.5">
+                <Loader2 className="w-4 h-4 animate-spin text-champagne" />
+                <span>Processing Handshake...</span>
+              </div>
+            ) : (
+              <div className="flex items-center justify-between w-full">
+                <div className="flex items-center gap-2">
+                  <Lock className="w-3.5 h-3.5 text-champagne" />
+                  <span>Pay Securely</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-extrabold text-champagne">${total.toFixed(2)} USD</span>
+                  <ArrowRight className="w-4 h-4 text-champagne group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+            )}
+          </motion.button>
+
+          {/* Trust Guarantees */}
+          <div className="flex flex-wrap items-center justify-center gap-4 text-[11px] font-mono text-charcoal-muted dark:text-stone-muted">
+            <span className="flex items-center gap-1">
+              <Check className="w-3.5 h-3.5 text-champagne" />
+              Zero Surcharges
+            </span>
+            <span className="opacity-40">•</span>
+            <span className="flex items-center gap-1">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-800 dark:text-champagne" />
+              Payoneer Settlement Guarantee
+            </span>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
