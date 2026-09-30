@@ -21,10 +21,8 @@ export const Navbar: React.FC = () => {
   }, []);
 
   const navLinks = [
-    { label: 'Store', path: '/' },
+    { label: 'Collection', path: '/' },
     { label: 'Checkout', path: '/checkout' },
-    { label: 'Operations', path: '/admin' },
-    { label: 'Sandbox Bench', path: '/admin/payments' },
   ];
 
   return (

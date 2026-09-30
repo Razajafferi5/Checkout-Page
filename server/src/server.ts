@@ -9,12 +9,13 @@ async function bootstrap() {
     logger.info('Starting PayFlow Backend Server...');
     await connectDatabase();
 
-    // Ensure catalog products are initialized
+    // Ensure catalog products and internal users are initialized
     const products = await dataStore.getAllProducts();
     if (products.length === 0) {
       logger.info('Initializing catalog with sample products...');
       await dataStore.seedProducts();
     }
+    await dataStore.seedUsers();
 
     const app = createApp();
 

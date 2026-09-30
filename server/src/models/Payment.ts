@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document, Types } from 'mongoose';
-import { PaymentStatus } from './Order';
+import { PaymentStatus, ITimelineEvent } from './Order';
 
 export type PaymentProviderType = 'mock' | 'payoneer';
 
@@ -14,6 +14,7 @@ export interface IPayment extends Document {
   status: PaymentStatus;
   failureReason?: string;
   metadata?: Record<string, unknown>;
+  timeline?: ITimelineEvent[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -35,6 +36,14 @@ const PaymentSchema = new Schema<IPayment>(
     },
     failureReason: { type: String },
     metadata: { type: Schema.Types.Mixed },
+    timeline: [
+      {
+        title: { type: String, required: true },
+        description: { type: String },
+        timestamp: { type: Date, default: Date.now },
+        state: { type: String, enum: ['success', 'processing', 'failure', 'neutral'], default: 'neutral' },
+      },
+    ],
   },
   { timestamps: true }
 );

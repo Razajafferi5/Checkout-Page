@@ -77,10 +77,13 @@ export const Footer: React.FC = () => {
                 <Link to="/checkout" className="text-ivory/70 hover:text-champagne transition-colors">Checkout Concierge</Link>
               </li>
               <li>
-                <Link to="/admin" className="text-ivory/70 hover:text-champagne transition-colors">Treasury Operations</Link>
+                <Link to="/internal/login" className="text-ivory/70 hover:text-champagne transition-colors">Staff Portal (Login)</Link>
               </li>
               <li>
-                <Link to="/admin/payments" className="text-ivory/70 hover:text-champagne transition-colors">Developer Debug Bench</Link>
+                <Link to="/operations" className="text-ivory/70 hover:text-champagne transition-colors">Operations Console</Link>
+              </li>
+              <li>
+                <Link to="/sandbox" className="text-ivory/70 hover:text-champagne transition-colors">Sandbox Testing Lab</Link>
               </li>
             </ul>
           </div>

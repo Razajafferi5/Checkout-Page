@@ -1,22 +1,66 @@
 import mongoose, { Types } from 'mongoose';
 import { Product, IProduct } from '../models/Product';
-import { Order, IOrder, PaymentStatus, OrderStatus } from '../models/Order';
+import { Order, IOrder, PaymentStatus, OrderStatus, ITimelineEvent } from '../models/Order';
 import { Payment, IPayment } from '../models/Payment';
 import { WebhookEvent, IWebhookEvent } from '../models/WebhookEvent';
+import { User, IUser, hashPassword } from '../models/User';
+import { AuditLog, IAuditLog } from '../models/AuditLog';
 import { sampleProducts } from '../scripts/seed';
 import { logger } from '../utils/logger';
+import { ENV } from './env';
 
 // In-Memory Storage Containers
 const memoryProducts: Map<string, IProduct> = new Map();
 const memoryOrders: Map<string, IOrder> = new Map();
 const memoryPayments: Map<string, IPayment> = new Map();
 const memoryWebhookEvents: Map<string, IWebhookEvent> = new Map();
+const memoryUsers: Map<string, IUser> = new Map();
+const memoryAuditLogs: IAuditLog[] = [];
 
 function isMongoConnected(): boolean {
   return mongoose.connection.readyState === 1;
 }
 
+export async function initInMemoryUsers(): Promise<void> {
+  if (memoryUsers.size === 0) {
+    const opsPasswordHash = await hashPassword(ENV.OPERATIONS_ADMIN_PASSWORD);
+    const sandboxPasswordHash = await hashPassword(ENV.SANDBOX_ADMIN_PASSWORD);
+
+    const opsUser = new User({
+      _id: new Types.ObjectId(),
+      firstName: 'Operations',
+      lastName: 'Manager',
+      email: ENV.OPERATIONS_ADMIN_EMAIL.toLowerCase(),
+      passwordHash: opsPasswordHash,
+      role: 'OPERATIONS',
+      active: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    const sandboxUser = new User({
+      _id: new Types.ObjectId(),
+      firstName: 'Sandbox',
+      lastName: 'Admin',
+      email: ENV.SANDBOX_ADMIN_EMAIL.toLowerCase(),
+      passwordHash: sandboxPasswordHash,
+      role: 'SANDBOX_ADMIN',
+      active: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    memoryUsers.set(opsUser.email, opsUser);
+    memoryUsers.set(opsUser._id.toString(), opsUser);
+    memoryUsers.set(sandboxUser.email, sandboxUser);
+    memoryUsers.set(sandboxUser._id.toString(), sandboxUser);
+
+    logger.info('In-memory internal users initialized (ops@payflow.internal, sandbox@payflow.internal).');
+  }
+}
+
 export function initInMemoryData(): void {
+  initInMemoryUsers().catch(err => logger.error('Failed to init in-memory users', err));
   if (memoryProducts.size === 0) {
     logger.info('Initializing in-memory product catalog with 8 premium products...');
     sampleProducts.forEach((item, index) => {
@@ -309,5 +353,169 @@ export const dataStore = {
     }
     memoryWebhookEvents.set(`${eventDoc.provider}_${eventDoc.eventId}`, eventDoc);
     return eventDoc;
+  },
+
+  async getAllWebhookEvents(
+    limit: number = 50,
+    skip: number = 0
+  ): Promise<{ events: IWebhookEvent[]; total: number }> {
+    if (isMongoConnected()) {
+      const [events, total] = await Promise.all([
+        WebhookEvent.find().sort({ createdAt: -1 }).skip(skip).limit(limit),
+        WebhookEvent.countDocuments(),
+      ]);
+      return { events, total };
+    }
+    const list = Array.from(memoryWebhookEvents.values()).sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+    const total = list.length;
+    const events = list.slice(skip, skip + limit);
+    return { events, total };
+  },
+
+  // USERS & AUTHENTICATION
+  async findUserByEmail(email: string): Promise<IUser | null> {
+    const normalized = email.toLowerCase().trim();
+    if (isMongoConnected()) {
+      return User.findOne({ email: normalized });
+    }
+    await initInMemoryUsers();
+    return memoryUsers.get(normalized) || null;
+  },
+
+  async findUserById(id: string): Promise<IUser | null> {
+    if (isMongoConnected()) {
+      return User.findById(id);
+    }
+    await initInMemoryUsers();
+    return memoryUsers.get(id) || null;
+  },
+
+  async createUser(userDoc: IUser): Promise<IUser> {
+    if (isMongoConnected()) {
+      return userDoc.save();
+    }
+    if (!userDoc._id) {
+      userDoc._id = new Types.ObjectId();
+    }
+    userDoc.createdAt = new Date();
+    userDoc.updatedAt = new Date();
+    memoryUsers.set(userDoc.email.toLowerCase(), userDoc);
+    memoryUsers.set(userDoc._id.toString(), userDoc);
+    return userDoc;
+  },
+
+  async updateUser(userDoc: IUser): Promise<IUser> {
+    userDoc.updatedAt = new Date();
+    if (isMongoConnected()) {
+      return userDoc.save();
+    }
+    memoryUsers.set(userDoc.email.toLowerCase(), userDoc);
+    memoryUsers.set(userDoc._id.toString(), userDoc);
+    return userDoc;
+  },
+
+  async seedUsers(): Promise<{ opsUser: IUser; sandboxUser: IUser }> {
+    const opsPasswordHash = await hashPassword(ENV.OPERATIONS_ADMIN_PASSWORD);
+    const sandboxPasswordHash = await hashPassword(ENV.SANDBOX_ADMIN_PASSWORD);
+
+    if (isMongoConnected()) {
+      const opsUser = await User.findOneAndUpdate(
+        { email: ENV.OPERATIONS_ADMIN_EMAIL.toLowerCase() },
+        {
+          $set: {
+            firstName: 'Operations',
+            lastName: 'Manager',
+            passwordHash: opsPasswordHash,
+            role: 'OPERATIONS',
+            active: true,
+          },
+        },
+        { upsert: true, new: true }
+      );
+
+      const sandboxUser = await User.findOneAndUpdate(
+        { email: ENV.SANDBOX_ADMIN_EMAIL.toLowerCase() },
+        {
+          $set: {
+            firstName: 'Sandbox',
+            lastName: 'Admin',
+            passwordHash: sandboxPasswordHash,
+            role: 'SANDBOX_ADMIN',
+            active: true,
+          },
+        },
+        { upsert: true, new: true }
+      );
+
+      logger.info('Database internal users seeded successfully.');
+      return { opsUser, sandboxUser };
+    }
+
+    await initInMemoryUsers();
+    const opsUser = memoryUsers.get(ENV.OPERATIONS_ADMIN_EMAIL.toLowerCase())!;
+    const sandboxUser = memoryUsers.get(ENV.SANDBOX_ADMIN_EMAIL.toLowerCase())!;
+    return { opsUser, sandboxUser };
+  },
+
+  // AUDIT LOGS
+  async saveAuditLog(logDoc: IAuditLog): Promise<IAuditLog> {
+    if (isMongoConnected()) {
+      return logDoc.save();
+    }
+    if (!logDoc._id) {
+      logDoc._id = new Types.ObjectId();
+    }
+    (logDoc as any).createdAt = new Date();
+    memoryAuditLogs.unshift(logDoc);
+    if (memoryAuditLogs.length > 500) {
+      memoryAuditLogs.pop();
+    }
+    return logDoc;
+  },
+
+  async getAuditLogs(
+    limit: number = 50,
+    skip: number = 0
+  ): Promise<{ logs: IAuditLog[]; total: number }> {
+    if (isMongoConnected()) {
+      const [logs, total] = await Promise.all([
+        AuditLog.find().sort({ createdAt: -1 }).skip(skip).limit(limit),
+        AuditLog.countDocuments(),
+      ]);
+      return { logs, total };
+    }
+    const total = memoryAuditLogs.length;
+    const logs = memoryAuditLogs.slice(skip, skip + limit);
+    return { logs, total };
+  },
+
+  // OPERATIONAL HELPERS (Timeline & Notes)
+  async addOrderNote(orderNumber: string, text: string, author: string): Promise<IOrder | null> {
+    const order = await this.getOrderByNumber(orderNumber);
+    if (!order) return null;
+
+    if (!order.notes) order.notes = [];
+    order.notes.push({ text, author, createdAt: new Date() });
+    return this.createOrder(order);
+  },
+
+  async addOrderTimeline(orderNumber: string, event: ITimelineEvent): Promise<IOrder | null> {
+    const order = await this.getOrderByNumber(orderNumber);
+    if (!order) return null;
+
+    if (!order.timeline) order.timeline = [];
+    order.timeline.push(event);
+    return this.createOrder(order);
+  },
+
+  async addPaymentTimeline(paymentIdOrProviderId: string, event: ITimelineEvent): Promise<IPayment | null> {
+    const payment = await this.getPaymentByIdOrProviderId(paymentIdOrProviderId);
+    if (!payment) return null;
+
+    if (!payment.timeline) payment.timeline = [];
+    payment.timeline.push(event);
+    return this.updatePayment(payment);
   },
 };

@@ -23,4 +23,14 @@ export const ENV = {
   },
 
   WEBHOOK_SECRET: process.env.WEBHOOK_SECRET || 'payflow_default_webhook_secret_key',
+
+  // Authentication & Internal Security
+  JWT_SECRET: process.env.JWT_SECRET || 'payflow_secure_jwt_fintech_token_secret_key_2026',
+  JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || '8h',
+
+  // Internal Seed User Defaults
+  OPERATIONS_ADMIN_EMAIL: process.env.OPERATIONS_ADMIN_EMAIL || 'ops@payflow.internal',
+  OPERATIONS_ADMIN_PASSWORD: process.env.OPERATIONS_ADMIN_PASSWORD || 'PayFlowOps2026!',
+  SANDBOX_ADMIN_EMAIL: process.env.SANDBOX_ADMIN_EMAIL || 'sandbox@payflow.internal',
+  SANDBOX_ADMIN_PASSWORD: process.env.SANDBOX_ADMIN_PASSWORD || 'PayFlowSandbox2026!',
 };

@@ -29,6 +29,19 @@ export interface ICustomerInfo {
 export type OrderStatus = 'PENDING_PAYMENT' | 'PROCESSING' | 'COMPLETED' | 'CANCELLED' | 'PAYMENT_FAILED';
 export type PaymentStatus = 'PENDING' | 'PROCESSING' | 'PAID' | 'FAILED' | 'CANCELLED' | 'EXPIRED' | 'REFUNDED';
 
+export interface ITimelineEvent {
+  title: string;
+  description?: string;
+  timestamp: Date;
+  state: 'success' | 'processing' | 'failure' | 'neutral';
+}
+
+export interface IOrderNote {
+  text: string;
+  author: string;
+  createdAt: Date;
+}
+
 export interface IOrder extends Document {
   orderNumber: string;
   customer: ICustomerInfo;
@@ -42,6 +55,8 @@ export interface IOrder extends Document {
   status: OrderStatus;
   paymentStatus: PaymentStatus;
   paymentId?: Types.ObjectId;
+  notes?: IOrderNote[];
+  timeline?: ITimelineEvent[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -105,6 +120,21 @@ const OrderSchema = new Schema<IOrder>(
       index: true,
     },
     paymentId: { type: Schema.Types.ObjectId, ref: 'Payment' },
+    notes: [
+      {
+        text: { type: String, required: true },
+        author: { type: String, required: true },
+        createdAt: { type: Date, default: Date.now },
+      },
+    ],
+    timeline: [
+      {
+        title: { type: String, required: true },
+        description: { type: String },
+        timestamp: { type: Date, default: Date.now },
+        state: { type: String, enum: ['success', 'processing', 'failure', 'neutral'], default: 'neutral' },
+      },
+    ],
   },
   { timestamps: true }
 );

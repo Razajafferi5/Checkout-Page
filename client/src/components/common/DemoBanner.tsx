@@ -57,20 +57,12 @@ export const DemoBanner: React.FC = () => {
 
         <div className="flex items-center gap-3 text-[11px] font-medium font-mono">
           <Link
-            to="/admin/payments"
+            to="/internal/login"
             className="flex items-center gap-1 hover:text-emerald-800 dark:hover:text-champagne transition-colors"
           >
             <Terminal className="w-3 h-3" />
-            <span>Developer Bench</span>
+            <span>Internal Portal</span>
             <ChevronRight className="w-3 h-3 opacity-60" />
-          </Link>
-          <span className="opacity-30">|</span>
-          <Link
-            to="/admin"
-            className="flex items-center gap-1 hover:text-emerald-800 dark:hover:text-champagne transition-colors"
-          >
-            <Sparkles className="w-3 h-3" />
-            <span>Treasury</span>
           </Link>
         </div>
       </div>
